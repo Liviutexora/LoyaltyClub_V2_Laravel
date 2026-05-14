@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+
 use App\Models\User;
+use Illuminate\Support\Str;
 
 class MembershipCardService
 {
@@ -21,8 +23,8 @@ class MembershipCardService
             $user->legacy_user_id = $legacyUser->id;
             $user->name = $legacyUser->nume;
             $user->email = $legacyUser->email;
-            // Parolă randomă (sau null dacă nu e folosită)
-            $user->password = '';
+            // Parolă randomă securizată (nu se folosește la login)
+            $user->password = bcrypt(Str::random(32));
             $user->save();
         }
         if (empty($user->qr_token)) {
