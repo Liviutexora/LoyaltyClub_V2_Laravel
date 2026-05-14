@@ -14,7 +14,7 @@ class MembershipCardService
         $user = User::where('legacy_user_id', $legacyId)->first();
         if (!$user) {
             // Încearcă să citești din baza legacy
-            $legacyUser = \App\Models\LegacyUser::find($legacyId);
+            $legacyUser = \App\Models\Legacy\LegacyUser::find($legacyId);
             if (!$legacyUser) {
                 return null;
             }
