@@ -7,3 +7,4 @@ Route::get('/', function () {
 });
 
 Route::get('/membership/{id}', [\App\Http\Controllers\MembershipCardController::class, 'show']);
+

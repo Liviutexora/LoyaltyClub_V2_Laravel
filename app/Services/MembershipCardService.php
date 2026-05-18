@@ -4,28 +4,17 @@ namespace App\Services;
 
 
 use App\Models\User;
+use App\Services\EcosystemHubService;
 use Illuminate\Support\Str;
 
 class MembershipCardService
 {
     public function getCardData($legacyId)
     {
-        // Caută user după legacy_user_id
-        $user = User::where('legacy_user_id', $legacyId)->first();
+        // Folosește LegacyUserSyncService pentru a asigura existența userului
+        $user = app(EcosystemHubService::class)->syncLegacyUser($legacyId);
         if (!$user) {
-            // Încearcă să citești din baza legacy
-            $legacyUser = \App\Models\Legacy\LegacyUser::find($legacyId);
-            if (!$legacyUser) {
-                return null;
-            }
-            // Creează user nou în V2
-            $user = new User();
-            $user->legacy_user_id = $legacyUser->id;
-            $user->name = $legacyUser->nume;
-            $user->email = $legacyUser->email;
-            // Parolă randomă securizată (nu se folosește la login)
-            $user->password = bcrypt(Str::random(32));
-            $user->save();
+            return null;
         }
         if (empty($user->qr_token)) {
             do {

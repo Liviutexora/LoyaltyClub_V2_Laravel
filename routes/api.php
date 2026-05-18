@@ -7,6 +7,7 @@ use App\Http\Controllers\QrImageController;
 use App\Http\Controllers\MembershipCardController;
 use App\Http\Controllers\QrTestRealUserController;
 
+Route::post('/ecosystem/sync-user', [\App\Http\Controllers\EcosystemHubController::class, 'syncUser']);
 Route::get('/qr/user/{id}', [QrController::class, 'user']);
 Route::get('/qr/validate/{token}', [QrValidationController::class, 'validateToken']);
 Route::get('/qr/image/{token}', [QrImageController::class, 'show']);
