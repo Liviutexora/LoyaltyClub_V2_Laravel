@@ -1,0 +1,29 @@
+{
+  "name": "Loyalty Club",
+  "id": "/mobile-app/53",
+  "short_name": "LoyaltyClub",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "display": "standalone",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone"
+  ],
+  "start_url": "/mobile-app/53",
+  "icons": [
+    {
+      "src": "/assets/mobile-app/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/assets/mobile-app/screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Loyalty Club Mobile App"
+    }
+  ]
+}

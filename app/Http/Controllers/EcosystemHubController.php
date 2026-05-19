@@ -28,4 +28,19 @@ class EcosystemHubController extends Controller
             'legacy_user_id' => $legacyUserId,
         ]);
     }
+
+    /**
+     * Display the Mobile App page after syncing the legacy user.
+     *
+     * @param int|string $legacy_user_id
+     * @return \Illuminate\View\View
+     */
+    public function mobileApp($legacy_user_id)
+    {
+        // Sync legacy user using EcosystemHubService
+        app(EcosystemHubService::class)->syncLegacyUser($legacy_user_id);
+        return view('mobile-app', [
+            'legacyUserId' => $legacy_user_id
+        ]);
+    }
 }

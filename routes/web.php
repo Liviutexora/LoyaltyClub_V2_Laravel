@@ -2,9 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\EcosystemHubController;
+
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::get('/membership/{id}', [\App\Http\Controllers\MembershipCardController::class, 'show']);
+
+Route::get('/mobile-app/{legacy_user_id}', [EcosystemHubController::class, 'mobileApp']);
 
