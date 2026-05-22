@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\EcosystemHubController;
+use App\Http\Controllers\QrScannerController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -12,3 +13,4 @@ Route::get('/membership/{id}', [\App\Http\Controllers\MembershipCardController::
 
 Route::get('/mobile-app/{legacy_user_id}', [EcosystemHubController::class, 'mobileApp']);
 
+Route::get('/scanner', [QrScannerController::class, 'index']);

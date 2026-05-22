@@ -1,11 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loyalty Club Membership Card</title>
+@extends('layouts.ecosystem')
+
+@section('title', 'Membership Card')
+
+@push('styles')
     <style>
-        body { background: #f7f7f7; font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 0; }
         .card-container { max-width: 400px; margin: 40px auto; background: #fff; border-radius: 18px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); padding: 32px 24px 24px 24px; text-align: center; }
         .club-title { font-size: 1.5rem; font-weight: 700; letter-spacing: 2px; color: #222; margin-bottom: 18px; }
         .user-name { font-size: 1.2rem; font-weight: 500; color: #333; margin-bottom: 8px; }
@@ -15,8 +13,9 @@
         .qr-section img, .qr-section svg { width: 220px; height: 220px; border-radius: 12px; background: #fafafa; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
         @media (max-width: 500px) { .card-container { max-width: 98vw; padding: 12vw 2vw; } .qr-section img, .qr-section svg { width: 60vw; height: 60vw; } }
     </style>
-</head>
-<body>
+@endpush
+
+@section('content')
     <div class="card-container">
         <div class="club-title">Loyalty Club</div>
         <div class="user-name">{{ $name }}</div>
@@ -27,5 +26,4 @@
             <img src="{{ $qr_image_url }}" alt="QR Code" />
         </div>
     </div>
-</body>
-</html>
+@endsection
