@@ -14,3 +14,5 @@ Route::get('/membership/{id}', [\App\Http\Controllers\MembershipCardController::
 Route::get('/mobile-app/{legacy_user_id}', [EcosystemHubController::class, 'mobileApp']);
 
 Route::get('/scanner', [QrScannerController::class, 'index']);
+
+Route::post('/scanner/lookup', [QrScannerController::class, 'lookup']);

@@ -100,6 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let qrScanner = null;
     let scannerStarted = false;
+    let processingScan = false;
 
     function closeScannerUI() {
 
@@ -154,24 +155,84 @@ document.addEventListener('DOMContentLoaded', function () {
                         qrbox: 250
                     },
                     function(decodedText){
+                        if (processingScan) {
+                            return;
+                        }
+                        processingScan = true;
 
                         console.log('QR detected:', decodedText);
+
                         window.lastScannedQr = decodedText;
 
-                        if (!qrScanner) return;
+                        // Lookup QR via POST
+                        const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
+                        const csrfToken = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : '';
+                        fetch('/scanner/lookup', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                ...(csrfToken ? { 'X-CSRF-TOKEN': csrfToken } : {})
+                            },
+                            body: JSON.stringify({ qr: decodedText })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('Lookup response:', data);
+                            if (data.success === true && data.user) {
+                                const nameEl = document.getElementById('qr-client-name');
+                                if (nameEl) nameEl.value = data.user.name;
+                                const idEl = document.getElementById('qr-legacy-id');
+                                if (idEl) idEl.value = data.user.legacy_user_id;
 
-                        stopScanner();
+                                // Open modal and hide scanner UI immediately, then stop and clear scanner async
+                                const modalEl = document.getElementById('transactionModal');
+                                if (modalEl) {
+                                    $('#transactionModal').modal('show');
+                                    closeScannerUI();
+                                    // Reset processingScan when modal is closed
+                                    $('#transactionModal').one('hidden.bs.modal', function () {
 
-                        setTimeout(function () {
-                            const modal = document.getElementById('transactionModal');
-                                if (modal) {
-                                    modal.classList.add('show');
-                                    modal.style.display = 'block';
-                                    modal.setAttribute('aria-modal', 'true');
-                                    modal.removeAttribute('aria-hidden');
-                                    document.body.classList.add('modal-open');
+                                        processingScan = false;
+
+                                        const scannerModal = document.querySelector('.scanner-modal');
+
+                                        if (scannerModal) {
+                                            scannerModal.style.display = 'block';
+                                        }
+
+                                        const qrReader = document.getElementById('qr-reader');
+
+                                        if (qrReader) {
+                                            qrReader.innerHTML = '';
+                                        }
+
+                                        qrScanner = null;
+                                        scannerStarted = false;
+
+                                        startScanner();
+                                    });
+                                }
+
+                                if (qrScanner) {
+                                    qrScanner.stop().then(function () {
+                                        qrScanner.clear();
+                                        qrScanner = null;
+                                        scannerStarted = false;
+                                    }).catch(function () {
+                                        qrScanner = null;
+                                        scannerStarted = false;
+                                    });
+                                }
                             }
-                        }, 300);
+                            else {
+                                processingScan = false;
+                                alert('Client not found. Please scan a valid Loyalty QR.');
+                            }
+                        })
+                        .catch(error => {
+                            processingScan = false;
+                            console.error('Lookup error:', error);
+                        });
                     },
                     function(error){}
                 );

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class LoyaltyUser extends Model
 {
-    protected $table = 'user';
+    protected $table = 'users';
     protected $primaryKey = 'id';
     public $timestamps = false;
     protected $fillable = [
