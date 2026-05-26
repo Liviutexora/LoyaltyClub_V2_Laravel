@@ -16,20 +16,20 @@ class MembershipCardService
         if (!$user) {
             return null;
         }
-        if (empty($user->qr_token)) {
+        if (empty($user->token)) {
             do {
                 $token = 'LCV2_' . \Illuminate\Support\Str::random(32);
-            } while (User::where('qr_token', $token)->exists());
-            $user->qr_token = $token;
+            } while (User::where('token', $token)->exists());
+            $user->token = $token;
             $user->save();
         }
         return [
             'id' => $user->id,
             'name' => $user->name,
-            'legacy_user_id' => $user->legacy_user_id,
+            'legacy_id' => $user->legacy_id,
             'status' => 'ACTIVE',
-            'qr_token' => $user->qr_token,
-            'qr_image_url' => url('/api/qr/image/' . $user->qr_token),
+            'token' => $user->token,
+            'qr_image_url' => url('/api/qr/image/' . $user->token),
         ];
     }
 }

@@ -16,8 +16,8 @@ class LegacyUserSyncService
      */
     public function ensureUserExists($legacyId)
     {
-        // 1. Search User by legacy_user_id
-        $user = User::where('legacy_user_id', $legacyId)->first();
+        // 1. Search User by legacy_id
+        $user = User::where('legacy_id', $legacyId)->first();
         if ($user) {
             // 2. If exists -> return user
             return $user;
@@ -32,7 +32,7 @@ class LegacyUserSyncService
 
         // create new User
         $user = new User();
-        $user->legacy_user_id = $legacyUser->id;
+        $user->legacy_id = $legacyUser->id;
         $user->name = $legacyUser->nume;
         $user->email = $legacyUser->email;
         // generate random password

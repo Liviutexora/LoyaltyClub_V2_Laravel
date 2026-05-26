@@ -8,12 +8,12 @@ class QrValidationService
 {
     public function validate($token)
     {
-        $user = User::where('qr_token', $token)->first();
+        $user = User::where('token', $token)->first();
         if ($user) {
             return [
                 'success' => true,
                 'user_id' => $user->id,
-                'legacy_user_id' => $user->legacy_user_id,
+                'legacy_id' => $user->legacy_id,
                 'name' => $user->name,
             ];
         } else {

@@ -10,11 +10,11 @@ class EcosystemHubController extends Controller
     public function syncUser(Request $request)
     {
         $validated = $request->validate([
-            'legacy_user_id' => 'required',
+            'legacy_id' => 'required',
         ]);
 
-        $legacyUserId = $validated['legacy_user_id'];
-        $user = app(EcosystemHubService::class)->syncLegacyUser($legacyUserId);
+        $legacyId = $validated['legacy_id'];
+        $user = app(EcosystemHubService::class)->syncLegacyUser($legacyId);
 
         if (!$user) {
             return response()->json([
@@ -25,22 +25,23 @@ class EcosystemHubController extends Controller
         return response()->json([
             'success' => true,
             'user_id' => $user->id,
-            'legacy_user_id' => $legacyUserId,
+            'legacy_id' => $legacyId,
         ]);
     }
 
     /**
      * Display the Mobile App page after syncing the legacy user.
      *
-     * @param int|string $legacy_user_id
+     * @param int|string $legacy_id
      * @return \Illuminate\View\View
      */
-    public function mobileApp($legacy_user_id)
+    public function mobileApp($legacy_id)
     {
         // Sync legacy user using EcosystemHubService
-        app(EcosystemHubService::class)->syncLegacyUser($legacy_user_id);
+        app(EcosystemHubService::class)->syncLegacyUser($legacy_id);
+        request()->session()->put('company_legacy_user_id', (int) $legacy_id);
         return view('mobile-app', [
-            'legacyUserId' => $legacy_user_id
+            'legacyUserId' => $legacy_id
         ]);
     }
 }

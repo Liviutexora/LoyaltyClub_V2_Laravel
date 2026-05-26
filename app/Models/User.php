@@ -21,20 +21,20 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'legacy_user_id',
+        'legacy_id',
     ];
 
     /**
-     * Boot the model and add automatic qr_token generation.
+     * Boot the model and add automatic token generation.
      */
     protected static function booted(): void
     {
         static::creating(function ($user) {
-            if (empty($user->qr_token)) {
+            if (empty($user->token)) {
                 do {
                     $token = 'LCV2_' . \Illuminate\Support\Str::random(32);
-                } while (self::where('qr_token', $token)->exists());
-                $user->qr_token = $token;
+                } while (self::where('token', $token)->exists());
+                $user->token = $token;
             }
         });
     }

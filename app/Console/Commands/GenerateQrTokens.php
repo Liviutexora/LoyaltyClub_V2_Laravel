@@ -13,15 +13,15 @@ class GenerateQrTokens extends Command
 
     public function handle()
     {
-        $users = LoyaltyUser::whereNull('qr_token')->get();
+        $users = LoyaltyUser::whereNull('token')->get();
         $updated = 0;
 
         foreach ($users as $user) {
             do {
                 $token = bin2hex(random_bytes(32)); // 64 hex chars, cryptographically secure
-            } while (LoyaltyUser::where('qr_token', $token)->exists());
+            } while (LoyaltyUser::where('token', $token)->exists());
 
-            $user->qr_token = $token;
+            $user->token = $token;
             $user->save();
             $updated++;
         }

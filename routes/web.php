@@ -11,7 +11,7 @@ Route::get('/', function () {
 
 Route::get('/membership/{id}', [\App\Http\Controllers\MembershipCardController::class, 'show']);
 
-Route::get('/mobile-app/{legacy_user_id}', [EcosystemHubController::class, 'mobileApp']);
+Route::get('/mobile-app/{legacy_id}', [EcosystemHubController::class, 'mobileApp']);
 
 Route::get('/scanner', [QrScannerController::class, 'index']);
 

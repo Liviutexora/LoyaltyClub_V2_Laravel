@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 const nameEl = document.getElementById('qr-client-name');
                                 if (nameEl) nameEl.value = data.user.name;
                                 const idEl = document.getElementById('qr-legacy-id');
-                                if (idEl) idEl.value = data.user.legacy_user_id;
+                                if (idEl) idEl.value = data.user.legacy_id;
 
                                 // Open modal and hide scanner UI immediately, then stop and clear scanner async
                                 const modalEl = document.getElementById('transactionModal');

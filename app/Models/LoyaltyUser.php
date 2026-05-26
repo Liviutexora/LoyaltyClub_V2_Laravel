@@ -10,6 +10,6 @@ class LoyaltyUser extends Model
     protected $primaryKey = 'id';
     public $timestamps = false;
     protected $fillable = [
-        'qr_token',
+        'token',
     ];
 }

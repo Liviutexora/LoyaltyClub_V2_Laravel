@@ -20,7 +20,7 @@
         <div class="club-title">Loyalty Club</div>
         <div class="user-name">{{ $name }}</div>
         <div class="user-id">User ID: {{ $id }}</div>
-        <div class="legacy-id">Legacy ID: {{ $legacy_user_id }}</div>
+        <div class="legacy-id">Legacy ID: {{ $legacy_id }}</div>
         <div class="status">Status: {{ $status }}</div>
         <div class="qr-section">
             <img src="{{ $qr_image_url }}" alt="QR Code" />
