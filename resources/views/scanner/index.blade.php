@@ -53,13 +53,26 @@
 }
 
 #scanner-cancel-btn{
-    background:#6c757d;
-    color:#fff;
-    border:none;
+    background:#f8f9fa;
+    color:#6c757d;
+    border:1px solid #d6dbe1;
     padding:10px 28px;
     border-radius:4px;
     cursor:pointer;
     font-size:16px;
+}
+
+#scanner-cancel-btn:hover,
+.btn-cancel-soft:hover{
+    background:#eef1f4;
+    border-color:#cbd2da;
+    color:#5f6770;
+}
+
+.btn-cancel-soft{
+    background:#f8f9fa;
+    border:1px solid #d6dbe1;
+    color:#6c757d;
 }
 
 </style>

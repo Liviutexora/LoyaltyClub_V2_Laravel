@@ -3,32 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Company;
-use App\Services\EcosystemHubService;
 use App\Services\QrLookupService;
+use App\Services\ScannerContextService;
 
 class QrScannerController extends Controller
 {
-    public function index()
+    public function index(Request $request, ScannerContextService $scannerContextService)
     {
-        $companyLegacyUserId = request()->session()->get('company_legacy_user_id');
-        if (!$companyLegacyUserId) {
-            $companyLegacyUserId = request()->query('company_legacy_user_id')
-                ?? request()->query('legacy_id');
-            if (!empty($companyLegacyUserId)) {
-                request()->session()->put('company_legacy_user_id', (int) $companyLegacyUserId);
-            }
-        }
-        if (!$companyLegacyUserId && Auth::check()) {
-            $companyLegacyUserId = Auth::user()->legacy_id ?? null;
-        }
-
-        $company = null;
-        if (!empty($companyLegacyUserId)) {
-            app(EcosystemHubService::class)->syncLegacyEntity($companyLegacyUserId);
-            $company = Company::where('legacy_id', $companyLegacyUserId)->first();
-        }
+        $company = $scannerContextService->resolveCompany($request);
 
         return view('scanner.index', [
             'company_name' => $company?->name,

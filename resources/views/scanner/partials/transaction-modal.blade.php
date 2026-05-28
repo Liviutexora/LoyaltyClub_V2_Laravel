@@ -53,6 +53,7 @@
                             <input
                                 type="text"
                                 class="form-control"
+                                id="transaction-amount"
                                 placeholder="0.00"
                                 style="background-color:#fff9e6;">
 
@@ -82,6 +83,7 @@
                             <input
                                 type="text"
                                 class="form-control"
+                                id="loyalty-value"
                                 readonly
                                 placeholder="0.00"
                                 style="background-color:#f8f9fa; color:#495057;">
@@ -111,7 +113,7 @@
             <div class="modal-footer">
 
                 <button
-                    class="btn btn-secondary"
+                    class="btn btn-cancel-soft"
                     type="button"
                     data-dismiss="modal">
                     Cancel
@@ -128,3 +130,30 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var amountInput = document.getElementById('transaction-amount');
+    var percentInput = document.getElementById('company-loyalty-percent');
+    var loyaltyValueInput = document.getElementById('loyalty-value');
+
+    if (!amountInput || !percentInput || !loyaltyValueInput) {
+        return;
+    }
+
+    amountInput.addEventListener('input', function () {
+        var amount = parseFloat((amountInput.value || '').replace(',', '.'));
+        var loyaltyPercent = parseFloat((percentInput.value || '').replace(',', '.'));
+
+        if (isNaN(amount) || isNaN(loyaltyPercent)) {
+            loyaltyValueInput.value = '';
+            loyaltyValueInput.style.backgroundColor = '#f8f9fa';
+            return;
+        }
+
+        var loyaltyValue = amount * loyaltyPercent / 100;
+        loyaltyValueInput.value = loyaltyValue.toFixed(2);
+        loyaltyValueInput.style.backgroundColor = loyaltyValue > 0 ? '#e9f8ee' : '#f8f9fa';
+    });
+});
+</script>
