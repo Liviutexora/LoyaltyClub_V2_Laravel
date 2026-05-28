@@ -68,8 +68,10 @@
                         <input
                             type="text"
                             class="form-control"
+                            id="company-loyalty-percent"
                             readonly
                             placeholder="%"
+                            value="{{ $company_loyalty_percent ?? '' }}"
                             style="background-color:#f8f9fa; color:#495057;">
                     </div>
 
