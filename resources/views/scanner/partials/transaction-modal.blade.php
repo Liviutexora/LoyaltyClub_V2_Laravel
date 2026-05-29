@@ -121,6 +121,7 @@
 
                 <button
                     class="btn btn-primary"
+                    id="validate-transaction-btn"
                     type="button">
                     Validate Transaction
                 </button>
@@ -136,6 +137,40 @@ document.addEventListener('DOMContentLoaded', function () {
     var amountInput = document.getElementById('transaction-amount');
     var percentInput = document.getElementById('company-loyalty-percent');
     var loyaltyValueInput = document.getElementById('loyalty-value');
+    var validateTransactionBtn = document.getElementById('validate-transaction-btn');
+
+    if (validateTransactionBtn) {
+        validateTransactionBtn.addEventListener('click', function () {
+            var companyId = '{{ session('company_legacy_user_id') ?? '' }}';
+            var userIdEl = document.getElementById('qr-legacy-id');
+            var amountEl = document.getElementById('transaction-amount');
+            var discountEl = document.getElementById('company-loyalty-percent');
+
+            var payload = {
+                company_id: companyId,
+                user_id: userIdEl ? userIdEl.value : '',
+                amount: amountEl ? amountEl.value : '',
+                discount: discountEl ? discountEl.value : ''
+            };
+
+            fetch('{{ route('scanner.validate-transaction') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Validation response:', data);
+            })
+            .catch(error => {
+                console.error('Validation request failed:', error);
+            });
+        });
+    }
 
     if (!amountInput || !percentInput || !loyaltyValueInput) {
         return;

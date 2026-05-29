@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\User;
 use App\Services\LegacyCompanySyncService;
 use App\Services\LegacyUserSyncService;
+use Illuminate\Support\Facades\Http;
 
 class EcosystemHubService
 {
@@ -45,5 +46,54 @@ class EcosystemHubService
     public function syncLegacyUser($legacyUserId)
     {
         return $this->syncLegacyEntity($legacyUserId);
+    }
+
+    /**
+     * Forward transaction validation payload to the bridge layer.
+     */
+    public function forwardTransactionValidation(array $payload): array
+    {
+        $url = config('services.legacy_bridge.transaction_validation_url');
+
+        if (empty($url)) {
+            return [
+                'success' => false,
+                'message' => 'Legacy bridge URL not configured',
+            ];
+        }
+
+        try {
+            $response = Http::asForm()->post($url, $payload);
+
+            if ($response->successful()) {
+                return [
+                    'success' => true,
+                    'data' => $response->body(),
+                ];
+            }
+
+            $contentType = (string) $response->header('Content-Type', '');
+            $bridgeMessage = null;
+
+            if (stripos($contentType, 'application/json') !== false) {
+                $bridgeMessage = $response->json('message');
+            }
+
+            $bridgeMessage = is_string($bridgeMessage) && trim($bridgeMessage) !== ''
+                ? $bridgeMessage
+                : $response->body();
+
+            return [
+                'success' => false,
+                'message' => trim((string) $bridgeMessage) !== ''
+                    ? $bridgeMessage
+                    : 'Bridge request failed',
+            ];
+        } catch (\Throwable $e) {
+            return [
+                'success' => false,
+                'message' => $e->getMessage(),
+            ];
+        }
     }
 }

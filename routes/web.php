@@ -19,3 +19,11 @@ Route::get('/scanner-launch/{legacy_id}', [ScannerLaunchController::class, 'laun
 Route::get('/scanner', [QrScannerController::class, 'index']);
 
 Route::post('/scanner/lookup', [QrScannerController::class, 'lookup']);
+
+Route::post('/scanner/validate-transaction', function (Illuminate\Http\Request $request) {
+    $payload = $request->input();
+    $result = app(\App\Services\TransactionValidationService::class)
+        ->validateTransaction($payload);
+
+    return response()->json($result);
+})->name('scanner.validate-transaction');

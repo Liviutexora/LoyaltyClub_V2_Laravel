@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    'legacy_bridge' => [
+        'transaction_validation_url' => env(
+            'LEGACY_TRANSACTION_VALIDATION_URL',
+            ''
+        ),
+    ],
+
 ];
