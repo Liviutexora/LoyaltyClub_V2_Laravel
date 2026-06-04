@@ -42,4 +42,9 @@ return [
         ),
     ],
 
+    'legacy_app_url' => env(
+        'LEGACY_APP_URL',
+        ''
+    ),
+
 ];

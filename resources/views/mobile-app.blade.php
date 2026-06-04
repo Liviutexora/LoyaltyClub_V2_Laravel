@@ -436,7 +436,8 @@ if (
     window.matchMedia('(display-mode: standalone)').matches ||
     window.navigator.standalone === true
 ) {
-    window.location.href = 'http://localhost/loyaltyclub.ro/';
+    const legacyAppUrl = @json(rtrim((string) config('services.legacy_app_url', env('LEGACY_APP_URL', 'http://localhost/loyaltyclub.ro/')), '/') . '/');
+    window.location.href = legacyAppUrl;
 }
 </script>
 </body>
