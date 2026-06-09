@@ -159,15 +159,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     return;
                 }
 
-                scannerStarted = true;
+                const scannerConfig = {
+                    fps: 10,
+                    qrbox: 250
+                };
 
-                qrScanner.start(
-                    cameras[0].id,
-                    {
-                        fps: 10,
-                        qrbox: 250
-                    },
-                    function(decodedText){
+                const onScanSuccess = function(decodedText){
                         if (processingScan) {
                             return;
                         }
@@ -246,9 +243,27 @@ document.addEventListener('DOMContentLoaded', function () {
                             processingScan = false;
                             console.error('Lookup error:', error);
                         });
-                    },
-                    function(error){}
-                );
+                    };
+
+                const onScanError = function(error){};
+
+                scannerStarted = true;
+
+                qrScanner.start(
+                    { facingMode: "environment" },
+                    scannerConfig,
+                    onScanSuccess,
+                    onScanError
+                ).catch(function(){
+                    return qrScanner.start(
+                        cameras[0].id,
+                        scannerConfig,
+                        onScanSuccess,
+                        onScanError
+                    );
+                }).catch(function(){
+                    scannerStarted = false;
+                });
             })
             .catch(function(err){
                 console.log(err);
