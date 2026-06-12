@@ -132,6 +132,40 @@
     </div>
 </div>
 
+{{-- Transaction Success Modal --}}
+<div id="txSuccessModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="txSuccessModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#d4edda; border-bottom:1px solid #c3e6cb;">
+                <h5 class="modal-title text-success font-weight-bold" id="txSuccessModalLabel">Success</h5>
+            </div>
+            <div class="modal-body text-center py-4">
+                <p class="mb-0">Transaction validated successfully.</p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-success" id="txSuccessOkBtn">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- Transaction Error Modal --}}
+<div id="txErrorModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="txErrorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#f8d7da; border-bottom:1px solid #f5c6cb;">
+                <h5 class="modal-title text-danger font-weight-bold" id="txErrorModalLabel">Error</h5>
+            </div>
+            <div class="modal-body text-center py-4">
+                <p class="mb-0" id="txErrorMessage">Transaction validation failed.</p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     var amountInput = document.getElementById('transaction-amount');
@@ -163,12 +197,35 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: JSON.stringify(payload)
             })
             .then(response => response.json())
-            .then(data => {
-                console.log('Validation response:', data);
+            .then(function (data) {
+                if (data.success === true) {
+                    $('#txSuccessModal').modal('show');
+                } else {
+                    var msg = (data.message && String(data.message).trim() !== '')
+                        ? data.message
+                        : 'Transaction validation failed.';
+                    document.getElementById('txErrorMessage').textContent = msg;
+                    $('#txErrorModal').modal('show');
+                }
             })
-            .catch(error => {
+            .catch(function (error) {
+                document.getElementById('txErrorMessage').textContent = 'Transaction validation failed.';
+                $('#txErrorModal').modal('show');
                 console.error('Validation request failed:', error);
             });
+        });
+    }
+
+    var txSuccessOkBtn = document.getElementById('txSuccessOkBtn');
+    if (txSuccessOkBtn) {
+        txSuccessOkBtn.addEventListener('click', function () {
+            $('#txSuccessModal').modal('hide');
+            $('#transactionModal').modal('hide');
+            var amtEl = document.getElementById('transaction-amount');
+            var loyEl = document.getElementById('loyalty-value');
+            if (amtEl) { amtEl.value = ''; amtEl.style.backgroundColor = '#fff9e6'; }
+            if (loyEl) { loyEl.value = ''; loyEl.style.backgroundColor = '#f8f9fa'; }
+            window.close();
         });
     }
 

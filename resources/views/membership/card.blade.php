@@ -25,5 +25,8 @@
         <div class="qr-section">
             <img src="{{ $qr_image_url }}" alt="QR Code" />
         </div>
+        <div style="margin-top:20px;">
+            <button type="button" class="btn btn-outline-secondary" onclick="window.close()">Close</button>
+        </div>
     </div>
 @endsection
