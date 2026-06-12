@@ -432,11 +432,17 @@ if (installBtn) {
     </script>
 <script>
 // Redirect if running as installed PWA (standalone)
+@php
+    $legacyAppUrl = rtrim(
+        (string) config('services.legacy_app_url', env('LEGACY_APP_URL', 'http://localhost/loyaltyclub.ro/')),
+        '/'
+    ) . '/';
+@endphp
 if (
     window.matchMedia('(display-mode: standalone)').matches ||
     window.navigator.standalone === true
 ) {
-    const legacyAppUrl = @json(rtrim((string) config('services.legacy_app_url', env('LEGACY_APP_URL', 'http://localhost/loyaltyclub.ro/')), '/') . '/');
+    const legacyAppUrl = @json($legacyAppUrl);
     window.location.href = legacyAppUrl;
 }
 </script>
